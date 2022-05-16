@@ -13,7 +13,7 @@ namespace MyBoardsMinimalAPI.Entities
         public string LastName { get; set; }
         public string Email { get; set; }
 
-        //relations one-to-one
+        //relations one-to-one  User--[1]----[1]--Address
         public Address Address { get; set; }
     }
 }
