@@ -13,5 +13,9 @@ namespace MyBoardsMinimalAPI.Entities
         public string Author { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+
+        //relations one-to-many  WorkItem--[1]----[*]--Comment
+        public WorkItem WorkItem { get; set; }
+        public int WorkItemId { get; set; }
     }
 }

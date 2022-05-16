@@ -24,6 +24,10 @@ namespace MyBoardsMinimalAPI.Entities
         //Task
         public string Activity { get; set; }
         public decimal RemaningWork { get; set; }
+
         public string Type { get; set; }
+
+        //relations one-to-many  WorkItem--[1]----[*]--Comment
+        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

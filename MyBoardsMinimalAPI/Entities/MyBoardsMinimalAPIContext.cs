@@ -42,6 +42,11 @@ namespace MyBoardsMinimalAPI.Entities
                 eb.Property(x => x.Activity).HasMaxLength(200);
                 eb.Property(x => x.RemaningWork).HasPrecision(14, 2);
                 eb.Property(x => x.Priority).HasDefaultValue(3);
+
+                //relations one-to-many  WorkItem--[1]----[*]--Comment
+                eb.HasMany(wi => wi.Comments)
+                .WithOne(c => c.WorkItem)
+                .HasForeignKey(c => c.WorkItemId);
             });
 
             modelBuilder.Entity<Comment>(eb =>
