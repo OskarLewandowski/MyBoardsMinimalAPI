@@ -20,6 +20,13 @@ namespace MyBoardsMinimalAPI.Entities
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Address> Addresses { get; set; }
 
+        //Example of composite keys on User for LastName and Email
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<User>()
+        //        .HasKey(x => new { x.LastName, x.Email });
+        //}
+
         //We can add connection string here but it's not good
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
