@@ -47,6 +47,12 @@ namespace MyBoardsMinimalAPI.Entities
                 eb.HasMany(wi => wi.Comments)
                 .WithOne(c => c.WorkItem)
                 .HasForeignKey(c => c.WorkItemId);
+
+                //relations many-to-one  WorkItem--[*]----[1]--User
+                eb.HasOne(wi => wi.Author)
+                .WithMany(u => u.WorkItems)
+                .HasForeignKey(wi => wi.AuthorId);
+
             });
 
             modelBuilder.Entity<Comment>(eb =>
@@ -60,6 +66,7 @@ namespace MyBoardsMinimalAPI.Entities
                 .HasOne(u => u.Address)
                 .WithOne(a => a.User)
                 .HasForeignKey<Address>(a => a.UserId);
+
         }
 
 

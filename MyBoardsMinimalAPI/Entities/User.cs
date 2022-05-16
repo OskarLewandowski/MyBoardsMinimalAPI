@@ -15,5 +15,8 @@ namespace MyBoardsMinimalAPI.Entities
 
         //relations one-to-one  User--[1]----[1]--Address
         public Address Address { get; set; }
+
+        //relations many-to-one  WorkItem--[*]----[1]--User
+        public List<WorkItem> WorkItems { get; set; } = new List<WorkItem>();
     }
 }
