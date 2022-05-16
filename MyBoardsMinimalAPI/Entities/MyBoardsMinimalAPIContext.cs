@@ -20,6 +20,31 @@ namespace MyBoardsMinimalAPI.Entities
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Address> Addresses { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //we can write any requirement separately
+            //modelBuilder.Entity<WorkItem>()
+            //    .Property(x => x.State)
+            //    .IsRequired();
+
+            //modelBuilder.Entity<WorkItem>()
+            //    .Property(x => x.Area)
+            //    .HasColumnType("varchar(200)");
+
+            //or we can do this, like this in one modelBuilder
+            modelBuilder.Entity<WorkItem>(eb =>
+            {
+                eb.Property(x => x.State).IsRequired();
+                eb.Property(x => x.Area).HasColumnType("varchar(200)");
+                eb.Property(x => x.IterationPath).HasColumnName("Iteration_Path");
+                eb.Property(x => x.EndDate).HasPrecision(3);
+                eb.Property(x => x.Efford).HasColumnType("decimal(5, 2)");
+                eb.Property(x => x.Activity).HasMaxLength(200);
+                eb.Property(x => x.RemaningWork).HasPrecision(14, 2);
+            });
+        }
+
+
         //Example of composite keys on User for LastName and Email
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
