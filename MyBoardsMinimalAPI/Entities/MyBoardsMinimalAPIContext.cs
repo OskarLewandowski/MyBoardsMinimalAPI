@@ -15,6 +15,9 @@ namespace MyBoardsMinimalAPI.Entities
         }
 
         public DbSet<WorkItem> WorkItems { get; set; }
+        public DbSet<Epic> Epic { get; set; }
+        public DbSet<Issue> Issue { get; set; }
+        public DbSet<Task> Task { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Comment> Comments { get; set; }
@@ -32,15 +35,27 @@ namespace MyBoardsMinimalAPI.Entities
             //    .Property(x => x.Area)
             //    .HasColumnType("varchar(200)");
 
+            modelBuilder.Entity<Epic>()
+                .Property(e => e.EndDate)
+                .HasPrecision(3);
+
+            modelBuilder.Entity<Issue>()
+                .Property(i => i.Efford)
+                .HasColumnType("decimal(5, 2)");
+
+            modelBuilder.Entity<Task>()
+                .Property(t => t.Activity)
+                .HasMaxLength(200);
+
+            modelBuilder.Entity<Task>()
+                .Property(t => t.RemaningWork)
+                .HasPrecision(14, 2);
+
             //or we can do this, like this in one modelBuilder
             modelBuilder.Entity<WorkItem>(eb =>
             {
                 eb.Property(x => x.Area).HasColumnType("varchar(200)");
                 eb.Property(x => x.IterationPath).HasColumnName("Iteration_Path");
-                eb.Property(x => x.EndDate).HasPrecision(3);
-                eb.Property(x => x.Efford).HasColumnType("decimal(5, 2)");
-                eb.Property(x => x.Activity).HasMaxLength(200);
-                eb.Property(x => x.RemaningWork).HasPrecision(14, 2);
                 eb.Property(x => x.Priority).HasDefaultValue(3);
 
                 //relations one-to-many  WorkItem--[1]----[*]--Comment
