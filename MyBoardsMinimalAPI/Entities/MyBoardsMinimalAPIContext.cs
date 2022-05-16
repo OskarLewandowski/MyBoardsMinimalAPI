@@ -19,6 +19,7 @@ namespace MyBoardsMinimalAPI.Entities
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<WorkItemState> WorkItemStates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,7 +35,6 @@ namespace MyBoardsMinimalAPI.Entities
             //or we can do this, like this in one modelBuilder
             modelBuilder.Entity<WorkItem>(eb =>
             {
-                eb.Property(x => x.State).IsRequired();
                 eb.Property(x => x.Area).HasColumnType("varchar(200)");
                 eb.Property(x => x.IterationPath).HasColumnName("Iteration_Path");
                 eb.Property(x => x.EndDate).HasPrecision(3);
@@ -77,6 +77,11 @@ namespace MyBoardsMinimalAPI.Entities
 
                     );
 
+                //relations many-to-one  WorkItem--[*]----[1]--WorkItemState
+                eb.HasOne(w => w.State)
+                .WithMany()
+                .HasForeignKey(w => w.StateId);
+
             });
 
             modelBuilder.Entity<Comment>(eb =>
@@ -94,6 +99,14 @@ namespace MyBoardsMinimalAPI.Entities
             //relations many-to-many  WorkItem--[*]----[*]--Tag
             //modelBuilder.Entity<WorkItemTag>()
             //    .HasKey(c => new { c.TagId, c.WorkItemId });
+
+
+            modelBuilder.Entity<WorkItemState>()
+                .Property(x => x.Value)
+                .IsRequired()
+                .HasMaxLength(50);
+
+
         }
 
 

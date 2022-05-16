@@ -12,7 +12,6 @@ namespace MyBoardsMinimalAPI.Entities
     public class WorkItem
     {
         public int Id { get; set; }
-        public string State { get; set; }
         public string Area { get; set; }
         public string IterationPath { get; set; }
         public int Priority { get; set; }
@@ -37,6 +36,10 @@ namespace MyBoardsMinimalAPI.Entities
         //relations many-to-many  WorkItem--[*]----[*]--Tag
         //public List<WorkItemTag> WorkItemTags { get; set; } = new List<WorkItemTag>();
         public List<Tag> Tags { get; set; }
+
+        //relations many-to-one  WorkItem--[*]----[1]--WorkItemState
+        public WorkItemState State { get; set; }
+        public int StateId { get; set; }
 
     }
 }
