@@ -53,6 +53,30 @@ namespace MyBoardsMinimalAPI.Entities
                 .WithMany(u => u.WorkItems)
                 .HasForeignKey(wi => wi.AuthorId);
 
+                //relations many-to-many  WorkItem--[*]----[*]--Tag
+                eb.HasMany(w => w.Tags)
+                .WithMany(t => t.WorkItems)
+                .UsingEntity<WorkItemTag>(
+
+                    //for Tag
+                    w => w.HasOne(wit => wit.Tag)
+                    .WithMany()
+                    .HasForeignKey(wit => wit.TagId),
+
+                    //for WorkItem
+                    w => w.HasOne(wit => wit.WorkItem)
+                    .WithMany()
+                    .HasForeignKey(wit => wit.WorkItemId),
+
+                    //for WorkItemTag
+                    wit =>
+                    {
+                        wit.HasKey(x => new { x.TagId, x.WorkItemId });
+                        wit.Property(x => x.PublicationDate).HasDefaultValueSql("getutcdate()");
+                    }
+
+                    );
+
             });
 
             modelBuilder.Entity<Comment>(eb =>
@@ -67,9 +91,9 @@ namespace MyBoardsMinimalAPI.Entities
                 .WithOne(a => a.User)
                 .HasForeignKey<Address>(a => a.UserId);
 
-
-            modelBuilder.Entity<WorkItemTag>()
-                .HasKey(c => new { c.TagId, c.WorkItemId });
+            //relations many-to-many  WorkItem--[*]----[*]--Tag
+            //modelBuilder.Entity<WorkItemTag>()
+            //    .HasKey(c => new { c.TagId, c.WorkItemId });
         }
 
 

@@ -12,6 +12,7 @@ namespace MyBoardsMinimalAPI.Entities
         public string Value { get; set; }
 
         //relations many-to-many  WorkItem--[*]----[*]--Tag
-        public List<WorkItemTag> WorkItemTags { get; set; } = new List<WorkItemTag>();
+        //public List<WorkItemTag> WorkItemTags { get; set; } = new List<WorkItemTag>();
+        public List<WorkItem> WorkItems { get; set; } 
     }
 }

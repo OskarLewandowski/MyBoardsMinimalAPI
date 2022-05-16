@@ -35,7 +35,8 @@ namespace MyBoardsMinimalAPI.Entities
         public Guid AuthorId { get; set; }
 
         //relations many-to-many  WorkItem--[*]----[*]--Tag
-        public List<WorkItemTag> WorkItemTags { get; set; } = new List<WorkItemTag>();
+        //public List<WorkItemTag> WorkItemTags { get; set; } = new List<WorkItemTag>();
+        public List<Tag> Tags { get; set; }
 
     }
 }
