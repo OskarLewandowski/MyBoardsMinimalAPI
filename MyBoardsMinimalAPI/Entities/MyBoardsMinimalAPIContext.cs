@@ -41,6 +41,13 @@ namespace MyBoardsMinimalAPI.Entities
                 eb.Property(x => x.Efford).HasColumnType("decimal(5, 2)");
                 eb.Property(x => x.Activity).HasMaxLength(200);
                 eb.Property(x => x.RemaningWork).HasPrecision(14, 2);
+                eb.Property(x => x.Priority).HasDefaultValue(3);
+            });
+
+            modelBuilder.Entity<Comment>(eb =>
+            {
+                eb.Property(x => x.CreateDate).HasDefaultValueSql("getutcdate()");
+                eb.Property(x => x.UpdatedDate).ValueGeneratedOnUpdate();
             });
         }
 
