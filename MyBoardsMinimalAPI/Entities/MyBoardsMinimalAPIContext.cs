@@ -49,6 +49,12 @@ namespace MyBoardsMinimalAPI.Entities
                 eb.Property(x => x.CreateDate).HasDefaultValueSql("getutcdate()");
                 eb.Property(x => x.UpdatedDate).ValueGeneratedOnUpdate();
             });
+
+            //relations one-to-one  User--[1]----[1]--Address
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Address)
+                .WithOne(a => a.User)
+                .HasForeignKey<Address>(a => a.UserId);
         }
 
 

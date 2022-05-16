@@ -13,5 +13,9 @@ namespace MyBoardsMinimalAPI.Entities
         public string City { get; set; }
         public string Street { get; set; }
         public string PostaCode { get; set; }
+
+        //relations one-to-one
+        public User User { get; set; }
+        public Guid UserId { get; set; }
     }
 }
