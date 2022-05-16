@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace MyBoardsMinimalAPI.Entities
 {
-    public class Tag
+    public class WorkItemTag
     {
-        public int Id { get; set; }
-        public string Value { get; set; }
-
         //relations many-to-many  WorkItem--[*]----[*]--Tag
-        public List<WorkItemTag> WorkItemTags { get; set; } = new List<WorkItemTag>();
+        public WorkItem WorkItem { get; set; }
+        public int WorkItemId { get; set; }
+        public Tag Tag { get; set; }
+        public int TagId { get; set; }
     }
 }

@@ -67,6 +67,9 @@ namespace MyBoardsMinimalAPI.Entities
                 .WithOne(a => a.User)
                 .HasForeignKey<Address>(a => a.UserId);
 
+
+            modelBuilder.Entity<WorkItemTag>()
+                .HasKey(c => new { c.TagId, c.WorkItemId });
         }
 
 
