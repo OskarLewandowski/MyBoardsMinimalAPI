@@ -8,28 +8,51 @@ namespace MyBoardsMinimalAPI.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<string>(
+                name: "FullName",
+                table: "Users",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.Sql(@"
+                UPDATE Users
+                SET FullName = FirstName + ' ' + LastName
+            ");
+
             migrationBuilder.DropColumn(
                 name: "FirstName",
                 table: "Users");
 
-            migrationBuilder.RenameColumn(
+            migrationBuilder.DropColumn(
                 name: "LastName",
-                table: "Users",
-                newName: "FullName");
+                table: "Users");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "FullName",
+            migrationBuilder.AddColumn<string>(
+                name: "LastName",
                 table: "Users",
-                newName: "LastName");
+                type: "nvarchar(max)",
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "FirstName",
                 table: "Users",
                 type: "nvarchar(max)",
                 nullable: true);
+
+            //update new columns
+            //migrationBuilder.Sql(@"
+            //    UPDATE Users
+            //    SET FirstName = RIGHT(FullName,LEN(FullName)-CHARINDEX(' ',FullName)),
+            //        LastName = LEFT(FullName,LEN(FullName)-CHARINDEX(' ',FullName))
+            //");
+
+            migrationBuilder.DropColumn(
+                name: "FullName",
+                table: "Users");
+
         }
     }
 }
