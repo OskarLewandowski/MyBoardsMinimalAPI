@@ -10,12 +10,15 @@ namespace MyBoardsMinimalAPI.Entities
     {
         public int Id { get; set; }
         public string Message { get; set; }
-        public string Author { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
 
         //relations one-to-many  WorkItem--[1]----[*]--Comment
         public WorkItem WorkItem { get; set; }
         public int WorkItemId { get; set; }
+
+        //relations one-to-many  User--[1]----[*]--Comment
+        public User Author { get; set; }
+        public Guid AuthorId { get; set; }
     }
 }

@@ -103,6 +103,13 @@ namespace MyBoardsMinimalAPI.Entities
             {
                 eb.Property(x => x.CreateDate).HasDefaultValueSql("getutcdate()");
                 eb.Property(x => x.UpdatedDate).ValueGeneratedOnUpdate();
+
+                //relations one-to-many  User--[1]----[*]--Comment
+                eb.HasOne(x => x.Author)
+                .WithMany(x => x.Comments)
+                .HasForeignKey(x => x.AuthorId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             });
 
             //relations one-to-one  User--[1]----[1]--Address

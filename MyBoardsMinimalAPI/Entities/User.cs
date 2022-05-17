@@ -19,5 +19,8 @@ namespace MyBoardsMinimalAPI.Entities
 
         //relations many-to-one  WorkItem--[*]----[1]--User
         public List<WorkItem> WorkItems { get; set; } = new List<WorkItem>();
+
+        //relations one-to-many  User--[1]----[*]--Comment
+        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }
