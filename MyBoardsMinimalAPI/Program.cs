@@ -55,8 +55,37 @@ if (!users.Any())
         }
     };
 
-    dbContext.Users.AddRange(user1, user2); 
-    dbContext.SaveChanges();    
+    dbContext.Users.AddRange(user1, user2);
+    dbContext.SaveChanges();
+}
+
+//task data seed tags example 1 of 2
+var tags = dbContext.Tags.ToList();
+if (!tags.Any())
+{
+    var tag1 = new Tag()
+    {
+        Value = "Web"
+    };
+    var tag2 = new Tag()
+    {
+        Value = "UI"
+    };
+    var tag3 = new Tag()
+    {
+        Value = "Desktop"
+    };
+    var tag4 = new Tag()
+    {
+        Value = "API"
+    };
+    var tag5 = new Tag()
+    {
+        Value = "Service"
+    };
+
+    dbContext.Tags.AddRange(tag1, tag2, tag3, tag4, tag5);
+    dbContext.SaveChanges();
 }
 
 app.Run();

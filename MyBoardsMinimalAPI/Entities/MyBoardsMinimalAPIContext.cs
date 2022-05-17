@@ -137,6 +137,17 @@ namespace MyBoardsMinimalAPI.Entities
                 new WorkItemState { Id = 3, Value = "Done" }
                 );
 
+            //task data seed tags example 2 of 2
+            //we need to do first migration and next update database for this example
+            //modelBuilder.Entity<Tag>()
+            //    .HasData(
+            //    new Tag { Id = 1, Value = "Web" },
+            //    new Tag { Id = 2, Value = "UI" },
+            //    new Tag { Id = 3, Value = "Desktop" },
+            //    new Tag { Id = 4, Value = "API" },
+            //    new Tag { Id = 5, Value = "Service" }
+            //    );
+
         }
 
 
