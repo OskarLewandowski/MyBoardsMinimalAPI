@@ -126,7 +126,7 @@ namespace MyBoardsMinimalAPI.Entities
             modelBuilder.Entity<WorkItemState>()
                 .Property(x => x.Value)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(60);
 
 
         }
