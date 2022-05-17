@@ -101,7 +101,7 @@ namespace MyBoardsMinimalAPI.Entities
 
             modelBuilder.Entity<Comment>(eb =>
             {
-                eb.Property(x => x.CreateDate).HasDefaultValueSql("getutcdate()");
+                eb.Property(x => x.CreatedDate).HasDefaultValueSql("getutcdate()");
                 eb.Property(x => x.UpdatedDate).ValueGeneratedOnUpdate();
 
                 //relations one-to-many  User--[1]----[*]--Comment

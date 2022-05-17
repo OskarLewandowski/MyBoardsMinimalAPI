@@ -12,7 +12,7 @@ namespace MyBoardsMinimalAPI.Entities
         public string Country { get; set; }
         public string City { get; set; }
         public string Street { get; set; }
-        public string PostaCode { get; set; }
+        public string PostalCode { get; set; }
 
         //relations one-to-one  User--[1]----[1]--Address
         public User User { get; set; }
