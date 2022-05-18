@@ -88,4 +88,58 @@ if (!tags.Any())
     dbContext.SaveChanges();
 }
 
+//Endpoints
+app.MapGet("Tags", (MyBoardsMinimalAPIContext db) =>
+{
+    var tags = db.Tags.ToList();
+    return tags;
+});
+
+app.MapGet("Data", (MyBoardsMinimalAPIContext db) =>
+{
+    var epic = db.Epic.First();
+    var user = db.Users.First(u => u.FullName == "User One");
+    return new { epic, user };
+});
+
+app.MapGet("ToDO", (MyBoardsMinimalAPIContext db) =>
+{
+    var toDoWorkItems = db.WorkItems
+    .Where(w => w.StateId == 1)
+    .ToList();
+
+    return toDoWorkItems;
+});
+
+//we have better performance where we use async
+app.MapGet("Comments", async (MyBoardsMinimalAPIContext db) =>
+{
+    var newComments = await db.Comments
+    .Where(c => c.CreatedDate > new DateTime(2022, 7, 23))
+    .ToListAsync();
+
+    return newComments;
+});
+
+app.MapGet("Top5NewestComments", async (MyBoardsMinimalAPIContext db) =>
+{
+    var top5NewestComments = await db.Comments
+    .OrderByDescending(c => c.CreatedDate)
+    .Take(5)
+    .ToListAsync();
+
+    return top5NewestComments;
+});
+
+app.MapGet("statesCount", async (MyBoardsMinimalAPIContext db) =>
+{
+    var statesCount = await db.WorkItems
+    .GroupBy(x => x.StateId)
+    .Select(g => new { stateId = g.Key, count = g.Count() })
+    .ToListAsync();
+
+    return statesCount;
+});
+
+
 app.Run();
