@@ -304,4 +304,37 @@ app.MapGet("getAuthorAllInformation", async (MyBoardsMinimalAPIContext db) =>
     return userWithDetails;
 });
 
+//Endpoints delete 
+//ON DELETE CASCADE
+app.MapDelete("deleteWorkItemTag", async (MyBoardsMinimalAPIContext db) =>
+{
+    var workItemTags = await db.WorkItemTag
+        .Where(c => c.WorkItemId == 12)
+        .ToListAsync();
+
+    db.WorkItemTag.RemoveRange(workItemTags);
+    //or
+    //db.RemoveRange(workItemTags);
+
+    var workItem = await db.WorkItems.FirstAsync(c => c.Id == 16);
+
+    db.RemoveRange(workItem);
+    await db.SaveChangesAsync();
+});
+
+app.MapDelete("deleteUser", async (MyBoardsMinimalAPIContext db) =>
+{
+    var user = await db.Users.FirstAsync(u => u.Id == Guid.Parse("DC231ACF-AD3C-445D-CC08-08DA10AB0E61"));
+
+    var userComments = await db.Comments.Where(c => c.AuthorId == user.Id).ToListAsync();
+
+    db.Comments.RemoveRange(userComments);
+    //db.Remove(userComments);
+
+    db.Users.Remove(user);
+
+    await db.SaveChangesAsync();
+});
+
+
 app.Run();
