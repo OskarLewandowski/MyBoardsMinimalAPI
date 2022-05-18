@@ -346,5 +346,47 @@ app.MapDelete("deleteUserClientCascade", async (MyBoardsMinimalAPIContext db) =>
     await db.SaveChangesAsync();
 });
 
+//Change tracker
+app.MapGet("dataWithChangeTracker", async (MyBoardsMinimalAPIContext db) =>
+{
+    var user = await db.Users
+    .FirstAsync(u => u.Id == Guid.Parse("D00D8059-8977-4E5F-CBD2-08DA10AB0E61"));
+
+    var entries1 = db.ChangeTracker.Entries();
+
+    user.Email = "test@test.com";
+
+    var entries2 = db.ChangeTracker.Entries();
+
+    db.SaveChanges();
+
+    return user;
+});
+
+app.MapGet("dataDeleteWithChangeTracker", (MyBoardsMinimalAPIContext db) =>
+{
+    var workItem = new Epic()
+    {
+        Id = 3
+    };
+
+    var entry = db.Attach(workItem);
+    entry.State = EntityState.Deleted;
+
+    db.SaveChanges();
+
+    return workItem;
+});
+
+app.MapGet("dataWithNoChangeTracker", (MyBoardsMinimalAPIContext db) =>
+{
+    var states = db.WorkItemStates
+    .AsNoTracking()
+    .ToList();
+
+    var entries1 = db.ChangeTracker.Entries();
+
+    return states;
+});
 
 app.Run();
