@@ -153,10 +153,11 @@ app.MapGet("selectedEpics", async (MyBoardsMinimalAPIContext db) =>
 
 app.MapGet("userWhoHaveTheMostComment", async (MyBoardsMinimalAPIContext db) =>
 {
-    var authorsCommentCounts = await db.Comments
+    var authorsCommentCountsQuery = db.Comments
     .GroupBy(c => c.AuthorId)
-    .Select(g => new { g.Key, Count = g.Count() })
-    .ToListAsync();
+    .Select(g => new { g.Key, Count = g.Count() });
+
+    var authorsCommentCounts = await authorsCommentCountsQuery.ToListAsync();
 
     var topAuthor = authorsCommentCounts
     .First(a => a.Count == authorsCommentCounts
