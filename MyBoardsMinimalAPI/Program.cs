@@ -209,4 +209,67 @@ app.MapPost("update3", async (MyBoardsMinimalAPIContext db) =>
     return epic;
 });
 
+//Endpoints create
+app.MapPost("create", async (MyBoardsMinimalAPIContext db) =>
+{
+    Tag tag = new Tag()
+    {
+        Value = "EF"
+    };
+
+    //await db.AddAsync(tag);
+    await db.Tags.AddAsync(tag);
+    await db.SaveChangesAsync();
+
+    return tag;
+});
+
+app.MapPost("create2", async (MyBoardsMinimalAPIContext db) =>
+{
+    Tag tag1 = new Tag()
+    {
+        Value = "EF"
+    };
+    Tag tag2 = new Tag()
+    {
+        Value = "MVC"
+    };
+    Tag tag3 = new Tag()
+    {
+        Value = "ASP"
+    };
+
+    var tags = new List<Tag>() { tag1, tag2, tag3 };
+
+    //await db.AddAsync(tag);
+    //await db.Tags.AddAsync(tag1);
+    //await db.Tags.AddAsync(tag2);
+    //await db.Tags.AddAsync(tag3);
+    //await db.Tags.AddRangeAsync(tag1,tag2,tag3);
+
+    await db.Tags.AddRangeAsync(tags);
+    await db.SaveChangesAsync();
+});
+
+app.MapPost("create3", async (MyBoardsMinimalAPIContext db) =>
+{
+    var address = new Address()
+    {
+        Id = Guid.Parse("7c9e6679-7425-40de-944b-e07fc1f90ae7"),
+        City = "Kraków",
+        Country = "Poland",
+        Street = "Krótka"
+    };
+
+    var user = new User()
+    {
+        Email = "userAdd@test.com",
+        FullName = "Test User12",
+        Address = address
+    };
+
+    await db.Users.AddAsync(user);
+    await db.SaveChangesAsync();
+});
+
 app.Run();
