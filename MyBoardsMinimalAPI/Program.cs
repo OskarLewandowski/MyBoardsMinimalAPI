@@ -1,10 +1,18 @@
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using MyBoardsMinimalAPI.Entities;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//fix json serialize cycle
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 //register in Di and connection to Db
 builder.Services.AddDbContext<MyBoardsMinimalAPIContext>(
@@ -270,6 +278,30 @@ app.MapPost("create3", async (MyBoardsMinimalAPIContext db) =>
 
     await db.Users.AddAsync(user);
     await db.SaveChangesAsync();
+});
+
+//Endpoints loading related data
+app.MapGet("getAuthorComments", async (MyBoardsMinimalAPIContext db) =>
+{
+    //var user = await db.Users.FirstAsync(u => u.Id == Guid.Parse("68366DBE-0809-490F-CC1D-08DA10AB0E61"));
+    //var userComments = await db.Comments.Where(c => c.AuthorId == user.Id).ToListAsync();
+
+    var userWithComments = await db.Users
+    .Include(u => u.Comments)
+    .FirstAsync(u => u.Id == Guid.Parse("68366DBE-0809-490F-CC1D-08DA10AB0E61"));
+
+    return userWithComments;
+});
+
+app.MapGet("getAuthorAllInformation", async (MyBoardsMinimalAPIContext db) =>
+{
+    var userWithDetails = await db.Users
+    .Include(u => u.Comments)
+    .ThenInclude(c => c.WorkItem)
+    .Include(u => u.Address)
+    .FirstAsync(u => u.Id == Guid.Parse("68366DBE-0809-490F-CC1D-08DA10AB0E61"));
+
+    return userWithDetails;
 });
 
 app.Run();
