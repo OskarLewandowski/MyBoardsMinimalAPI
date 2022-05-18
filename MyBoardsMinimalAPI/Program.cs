@@ -88,7 +88,7 @@ if (!tags.Any())
     dbContext.SaveChanges();
 }
 
-//Endpoints
+//Endpoints get
 app.MapGet("Tags", (MyBoardsMinimalAPIContext db) =>
 {
     var tags = db.Tags.ToList();
@@ -168,6 +168,45 @@ app.MapGet("userWhoHaveTheMostComment", async (MyBoardsMinimalAPIContext db) =>
     return new { userDetails, commentCount = topAuthor.Count };
 });
 
+//Endpoints update
+app.MapPost("update", async (MyBoardsMinimalAPIContext db) =>
+{
+    Epic epic = await db.Epic.FirstAsync(epic => epic.Id == 1);
 
+    epic.Area = "Updated area";
+    epic.Priority = 1;
+    epic.StartDate = DateTime.Now;
+    epic.StateId = 1;
+
+    await db.SaveChangesAsync();
+
+    return epic;
+});
+
+app.MapPost("update2", async (MyBoardsMinimalAPIContext db) =>
+{
+    Epic epic = await db.Epic.FirstAsync(epic => epic.Id == 1);
+
+    var onHoldState = await db.WorkItemStates.FirstAsync(a => a.Value == "On Hold");
+
+    epic.StateId = onHoldState.Id;
+
+    await db.SaveChangesAsync();
+
+    return epic;
+});
+
+app.MapPost("update3", async (MyBoardsMinimalAPIContext db) =>
+{
+    Epic epic = await db.Epic.FirstAsync(epic => epic.Id == 1);
+
+    var rejectedState = await db.WorkItemStates.FirstAsync(a => a.Value == "Rejected");
+
+    epic.State = rejectedState;
+
+    await db.SaveChangesAsync();
+
+    return epic;
+});
 
 app.Run();
