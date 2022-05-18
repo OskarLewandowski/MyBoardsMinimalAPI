@@ -109,7 +109,7 @@ namespace MyBoardsMinimalAPI.Entities
                 eb.HasOne(x => x.Author)
                 .WithMany(x => x.Comments)
                 .HasForeignKey(x => x.AuthorId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.ClientCascade);
 
             });
 
