@@ -389,4 +389,48 @@ app.MapGet("dataWithNoChangeTracker", (MyBoardsMinimalAPIContext db) =>
     return states;
 });
 
+//rawSql
+//We can be attacked by sql injection
+app.MapGet("dataRawSql", (MyBoardsMinimalAPIContext db) =>
+{
+    var minWorkItemsCount = "85";
+
+    var states = db.WorkItemStates
+    .FromSqlRaw(@"
+             SELECT wis.Id, wis.Value
+             FROM [MyBoardsDb].[dbo].[WorkItemStates] AS wis
+             JOIN WorkItems AS wi on wi.StateId = wis.Id
+             GROUP BY wis.Id, wis.Value
+             HAVING COUNT(*) > " + minWorkItemsCount)
+    .ToList();
+
+    return states;
+});
+
+app.MapGet("dataRawSql2", (MyBoardsMinimalAPIContext db) =>
+{
+    var minWorkItemsCount = "85";
+
+    var states = db.WorkItemStates
+    .FromSqlInterpolated(@$"
+             SELECT wis.Id, wis.Value
+             FROM [MyBoardsDb].[dbo].[WorkItemStates] AS wis
+             JOIN WorkItems AS wi on wi.StateId = wis.Id
+             GROUP BY wis.Id, wis.Value
+             HAVING COUNT(*) > {minWorkItemsCount}")
+    .ToList();
+
+    return states;
+});
+
+app.MapPost("dataRawSqlUpdate", (MyBoardsMinimalAPIContext db) =>
+{
+    db.Database.ExecuteSqlRaw(@"
+        UPDATE Comments
+        SET UpdatedDate = GETDATE()
+        WHERE AuthorId = '2073271A-3DFC-4A63-CBE5-08DA10AB0E61'"
+    );
+});
+
+
 app.Run();
