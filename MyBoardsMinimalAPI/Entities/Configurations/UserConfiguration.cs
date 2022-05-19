@@ -16,6 +16,15 @@ namespace MyBoardsMinimalAPI.Entities.Configurations
             builder.HasOne(u => u.Address)
                 .WithOne(a => a.User)
                 .HasForeignKey<Address>(a => a.UserId);
+
+            //index
+            //builder.HasIndex(u => u.Email);
+            //composite index
+            //builder.HasIndex(u => new { u.Email, u.FullName })
+            //    .HasDatabaseName("FirstIndexUser") name of index
+            //    .IsUnique(); unique value
+
+            builder.HasIndex(u => new { u.Email, u.FullName });
         }
     }
 }
