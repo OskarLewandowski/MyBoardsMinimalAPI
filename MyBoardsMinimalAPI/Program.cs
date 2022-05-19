@@ -17,7 +17,7 @@ builder.Services.Configure<JsonOptions>(options =>
 //register in Di and connection to Db
 builder.Services.AddDbContext<MyBoardsMinimalAPIContext>(
     option => option
-    .UseLazyLoadingProxies()
+    //.UseLazyLoadingProxies()
     .UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
     );
 
