@@ -15,12 +15,12 @@ namespace MyBoardsMinimalAPI.Entities
         public string Email { get; set; }
 
         //relations one-to-one  User--[1]----[1]--Address
-        public Address Address { get; set; }
+        public virtual Address Address { get; set; }
 
         //relations many-to-one  WorkItem--[*]----[1]--User
-        public List<WorkItem> WorkItems { get; set; } = new List<WorkItem>();
+        public virtual List<WorkItem> WorkItems { get; set; } = new List<WorkItem>();
 
         //relations one-to-many  User--[1]----[*]--Comment
-        public List<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

@@ -16,7 +16,9 @@ builder.Services.Configure<JsonOptions>(options =>
 
 //register in Di and connection to Db
 builder.Services.AddDbContext<MyBoardsMinimalAPIContext>(
-    option => option.UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
+    option => option
+    .UseLazyLoadingProxies()
+    .UseSqlServer(builder.Configuration.GetConnectionString("MyBoardsConnectionString"))
     );
 
 var app = builder.Build();
@@ -448,5 +450,26 @@ app.MapGet("dataOwnedTypes", (MyBoardsMinimalAPIContext db) =>
     return data;
 });
 
+//Lazy loading
+app.MapGet("dataLazyLoading", (MyBoardsMinimalAPIContext db) =>
+{
+    var withAddress = true;
+
+    var user = db.Users
+        .First(u => u.Id == Guid.Parse("5CB27C3F-32D9-4474-CBC2-08DA10AB0E61"));
+
+    if (withAddress)
+    {
+        var result = new
+        {
+            FullName = user.FullName,
+            Address = $"{user.Address.Street} {user.Address.City}"
+        };
+
+        return result;
+    };
+
+    return new { FullName = user.FullName, Address = "-" };
+});
 
 app.Run();

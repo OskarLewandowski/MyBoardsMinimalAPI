@@ -14,11 +14,11 @@ namespace MyBoardsMinimalAPI.Entities
         public DateTime? UpdatedDate { get; set; }
 
         //relations one-to-many  WorkItem--[1]----[*]--Comment
-        public WorkItem WorkItem { get; set; }
+        public virtual WorkItem WorkItem { get; set; }
         public int WorkItemId { get; set; }
 
         //relations one-to-many  User--[1]----[*]--Comment
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
         public Guid AuthorId { get; set; }
     }
 }

@@ -34,18 +34,18 @@ namespace MyBoardsMinimalAPI.Entities
         public int Priority { get; set; }
 
         //relations one-to-many  WorkItem--[1]----[*]--Comment
-        public List<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual List<Comment> Comments { get; set; } = new List<Comment>();
 
         //relations many-to-one  WorkItem--[*]----[1]--User
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
         public Guid AuthorId { get; set; }
 
         //relations many-to-many  WorkItem--[*]----[*]--Tag
         //public List<WorkItemTag> WorkItemTags { get; set; } = new List<WorkItemTag>();
-        public List<Tag> Tags { get; set; }
+        public virtual List<Tag> Tags { get; set; }
 
         //relations many-to-one  WorkItem--[*]----[1]--WorkItemState
-        public WorkItemState State { get; set; }
+        public virtual WorkItemState State { get; set; }
         public int StateId { get; set; }
 
     }

@@ -17,7 +17,7 @@ namespace MyBoardsMinimalAPI.Entities
         public Coordinate Coordinate { get; set; }
 
         //relations one-to-one  User--[1]----[1]--Address
-        public User User { get; set; }
+        public virtual User User { get; set; }
         public Guid UserId { get; set; }
     }
 
