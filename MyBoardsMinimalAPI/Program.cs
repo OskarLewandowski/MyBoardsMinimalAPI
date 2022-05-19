@@ -440,4 +440,13 @@ app.MapGet("dataViewTopAuthors", (MyBoardsMinimalAPIContext db) =>
     return topAuthors;
 });
 
+//Owned types using
+app.MapGet("dataOwnedTypes", (MyBoardsMinimalAPIContext db) =>
+{
+    var data = db.Addresses.Where(a => a.Coordinate.Latitude > 10);
+
+    return data;
+});
+
+
 app.Run();

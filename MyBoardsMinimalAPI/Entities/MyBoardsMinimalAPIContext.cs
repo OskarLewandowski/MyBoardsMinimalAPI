@@ -146,6 +146,14 @@ namespace MyBoardsMinimalAPI.Entities
                 eb.HasNoKey();
             });
 
+            //Owned types example 2 of 2
+            modelBuilder.Entity<Address>()
+                .OwnsOne(a => a.Coordinate, cmb =>
+                {
+                    cmb.Property(c => c.Latitude).HasPrecision(18, 7);
+                    cmb.Property(c => c.Longitude).HasPrecision(18, 7);
+                });
+
             //task data seed tags example 2 of 2
             //we need to do first migration and next update database for this example
             //modelBuilder.Entity<Tag>()
