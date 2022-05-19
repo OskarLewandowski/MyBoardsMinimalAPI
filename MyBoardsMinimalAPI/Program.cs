@@ -525,5 +525,53 @@ app.MapGet("dataPagination", (MyBoardsMinimalAPIContext db) =>
     return pagedResult;
 });
 
+//Select 
+app.MapGet("dataSelectBadPerformance", async (MyBoardsMinimalAPIContext db) =>
+{
+    var user = await db.Users
+        .Include(u => u.Address)
+        .Where(u => u.Address.Country == "Albania")
+        .ToListAsync();
+
+    return user.Select(u => u.FullName);
+});
+
+app.MapGet("dataSelectBadPerformance2", async (MyBoardsMinimalAPIContext db) =>
+{
+    var user = await db.Users
+        .Include(u => u.Address)
+        .Include(u => u.Comments)
+        .Where(u => u.Address.Country == "Albania")
+        .ToListAsync();
+
+    var comments = user.SelectMany(u => u.Comments).Select(c => c.Message);
+
+    return comments;
+});
+
+app.MapGet("dataSelectGoodPerformance", async (MyBoardsMinimalAPIContext db) =>
+{
+    var userFullName = await db.Users
+        .Include(u => u.Address)
+        .Where(u => u.Address.Country == "Albania")
+        .Select(u => u.FullName)
+        .ToListAsync();
+
+    return userFullName;
+});
+
+app.MapGet("dataSelectGoodPerformance2", async (MyBoardsMinimalAPIContext db) =>
+{
+    var userComments = await db.Users
+        .Include(u => u.Address)
+        .Include(u => u.Comments)
+        .Where(u => u.Address.Country == "Albania")
+        .SelectMany(u => u.Comments)
+        .Select(c => c.Message)
+        .ToListAsync();
+
+    return userComments;
+});
+
 
 app.Run();
