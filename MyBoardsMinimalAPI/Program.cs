@@ -573,5 +573,74 @@ app.MapGet("dataSelectGoodPerformance2", async (MyBoardsMinimalAPIContext db) =>
     return userComments;
 });
 
+//Problem n+1
+app.MapGet("LazyLoadingProblem_N+1", async (MyBoardsMinimalAPIContext db) =>
+{
+    var users = await db.Users
+            .Where(u => u.Address.Country == "Albania")
+            .ToListAsync();
+
+    foreach (var user in users)
+    {
+        foreach (var item in user.Comments)
+        {
+            //Proccess(comment);
+        }
+    }
+});
+
+app.MapGet("LazyLoadingProblem_N+1_Better", async (MyBoardsMinimalAPIContext db) =>
+{
+    var users = await db.Users
+            .Where(u => u.Address.Country == "Albania")
+            .Include(u => u.Comments)
+            .ToListAsync();
+
+    foreach (var user in users)
+    {
+        foreach (var item in user.Comments)
+        {
+            //Proccess(comment);
+        }
+    }
+});
+
+app.MapGet("dataProblem_N+1", async (MyBoardsMinimalAPIContext db) =>
+{
+    var users = await db.Users
+            .Include(u => u.Address)
+            .Where(u => u.Address.Country == "Albania")
+            .ToListAsync();
+
+    foreach (var user in users)
+    {
+        var userComments = db.Comments.Where(c => c.AuthorId == user.Id).ToList();
+
+        foreach (var comment in userComments)
+        {
+            //Proccess(comment);
+        }
+    }
+});
+
+app.MapGet("dataProblem_N+1_Better", async (MyBoardsMinimalAPIContext db) =>
+{
+    var users = await db.Users
+            .Include(u => u.Address)
+            .Include(u => u.Comments)
+            .Where(u => u.Address.Country == "Albania")
+            .ToListAsync();
+
+    foreach (var user in users)
+    {
+        var userComments = user.Comments;
+
+        foreach (var comment in userComments)
+        {
+            //Proccess(comment);
+        }
+    }
+});
+
 
 app.Run();
