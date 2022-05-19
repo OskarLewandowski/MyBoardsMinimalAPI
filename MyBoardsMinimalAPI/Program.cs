@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
+using MyBoardsMinimalAPI.Dto;
 using MyBoardsMinimalAPI.Entities;
+using System.Linq.Expressions;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -471,5 +473,57 @@ app.MapGet("dataLazyLoading", (MyBoardsMinimalAPIContext db) =>
 
     return new { FullName = user.FullName, Address = "-" };
 });
+
+//Pagination result
+app.MapGet("dataPagination", (MyBoardsMinimalAPIContext db) =>
+{
+    //user input
+    var filter = "a";
+    string sortBy = "FullName"; //"FullName" "Email" null
+    bool sortByDescending = false;
+    int pageNumber = 3;
+    int pageSize = 10;
+
+    //result
+    //EF have a problem with StringComparison.OrdinalIgnoreCase 
+    //var query = db.Users
+    //.Where(u => filter == null
+    //|| (u.Email.Contains(filter, StringComparison.OrdinalIgnoreCase)
+    //|| u.FullName.Contains(filter, StringComparison.OrdinalIgnoreCase)));
+
+    var query = db.Users
+    .Where(u => filter == null
+    || (u.Email.ToLower().Contains(filter.ToLower())
+    || u.FullName.ToLower().Contains(filter.ToLower())));
+
+    var totalItemsCount = query.Count();
+
+    if (sortBy != null)
+    {
+        var columnsSelector = new Dictionary<string, Expression<Func<User, object>>>
+        {   
+            //nameof(User.Email) is same like "Email"
+            {nameof(User.Email), user => user.Email },
+            {nameof(User.FullName), user => user.FullName }
+        };
+
+        //Expression<Func<User, object>>
+        var sortByExpression = columnsSelector[sortBy];
+
+        query = sortByDescending
+        ? query.OrderByDescending(sortByExpression)
+        : query.OrderBy(sortByExpression);
+    }
+
+    var result = query
+                 .Skip(pageSize * pageNumber - 1)
+                 .Take(pageSize)
+                 .ToList();
+
+    var pagedResult = new PagedResult<User>(result, totalItemsCount, pageSize, pageNumber);
+
+    return pagedResult;
+});
+
 
 app.Run();
