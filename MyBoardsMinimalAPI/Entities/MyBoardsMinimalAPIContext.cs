@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyBoardsMinimalAPI.Entities.Configurations;
 using MyBoardsMinimalAPI.Entities.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -29,130 +30,14 @@ namespace MyBoardsMinimalAPI.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //we can write any requirement separately
-            //modelBuilder.Entity<WorkItem>()
-            //    .Property(x => x.State)
-            //    .IsRequired();
+            //we can do it by single or
+            //new AddressConfiguration().Configure(modelBuilder.Entity<Address>());
+            //new CommentConfiguration().Configure(modelBuilder.Entity<Comment>());
 
-            //modelBuilder.Entity<WorkItem>()
-            //    .Property(x => x.Area)
-            //    .HasColumnType("varchar(200)");
-
-            modelBuilder.Entity<Epic>()
-                .Property(e => e.EndDate)
-                .HasPrecision(3);
-
-            modelBuilder.Entity<Issue>()
-                .Property(i => i.Efford)
-                .HasColumnType("decimal(5, 2)");
-
-            modelBuilder.Entity<Task>()
-                .Property(t => t.Activity)
-                .HasMaxLength(200);
-
-            modelBuilder.Entity<Task>()
-                .Property(t => t.RemaningWork)
-                .HasPrecision(14, 2);
-
-            //or we can do this, like this in one modelBuilder
-            modelBuilder.Entity<WorkItem>(eb =>
-            {
-                eb.Property(x => x.Area).HasColumnType("varchar(200)");
-                eb.Property(x => x.IterationPath).HasColumnName("Iteration_Path");
-                eb.Property(x => x.Priority).HasDefaultValue(3);
-
-                //relations one-to-many  WorkItem--[1]----[*]--Comment
-                eb.HasMany(wi => wi.Comments)
-                .WithOne(c => c.WorkItem)
-                .HasForeignKey(c => c.WorkItemId);
-
-                //relations many-to-one  WorkItem--[*]----[1]--User
-                eb.HasOne(wi => wi.Author)
-                .WithMany(u => u.WorkItems)
-                .HasForeignKey(wi => wi.AuthorId);
-
-                //relations many-to-many  WorkItem--[*]----[*]--Tag
-                eb.HasMany(w => w.Tags)
-                .WithMany(t => t.WorkItems)
-                .UsingEntity<WorkItemTag>(
-
-                    //for Tag
-                    w => w.HasOne(wit => wit.Tag)
-                    .WithMany()
-                    .HasForeignKey(wit => wit.TagId),
-
-                    //for WorkItem
-                    w => w.HasOne(wit => wit.WorkItem)
-                    .WithMany()
-                    .HasForeignKey(wit => wit.WorkItemId),
-
-                    //for WorkItemTag
-                    wit =>
-                    {
-                        wit.HasKey(x => new { x.TagId, x.WorkItemId });
-                        wit.Property(x => x.PublicationDate).HasDefaultValueSql("getutcdate()");
-                    }
-
-                    );
-
-                //relations many-to-one  WorkItem--[*]----[1]--WorkItemState
-                eb.HasOne(w => w.State)
-                .WithMany()
-                .HasForeignKey(w => w.StateId);
-
-            });
-
-            modelBuilder.Entity<Comment>(eb =>
-            {
-                eb.Property(x => x.CreatedDate).HasDefaultValueSql("getutcdate()");
-                eb.Property(x => x.UpdatedDate).ValueGeneratedOnUpdate();
-
-                //relations one-to-many  User--[1]----[*]--Comment
-                eb.HasOne(x => x.Author)
-                .WithMany(x => x.Comments)
-                .HasForeignKey(x => x.AuthorId)
-                .OnDelete(DeleteBehavior.ClientCascade);
-
-            });
-
-            //relations one-to-one  User--[1]----[1]--Address
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Address)
-                .WithOne(a => a.User)
-                .HasForeignKey<Address>(a => a.UserId);
-
-            //relations many-to-many  WorkItem--[*]----[*]--Tag
+            modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
+            
             //modelBuilder.Entity<WorkItemTag>()
             //    .HasKey(c => new { c.TagId, c.WorkItemId });
-
-
-            modelBuilder.Entity<WorkItemState>()
-                .Property(x => x.Value)
-                .IsRequired()
-                .HasMaxLength(60);
-
-
-            //seed data in WorkiItemState
-            modelBuilder.Entity<WorkItemState>()
-                .HasData(
-                new WorkItemState { Id = 1, Value = "To do" },
-                new WorkItemState { Id = 2, Value = "Doing" },
-                new WorkItemState { Id = 3, Value = "Done" }
-                );
-
-            modelBuilder.Entity<TopAuthor>(eb =>
-            {
-                eb.ToView("View_TopAuthors");
-                eb.HasNoKey();
-            });
-
-            //Owned types example 2 of 2
-            modelBuilder.Entity<Address>()
-                .OwnsOne(a => a.Coordinate, cmb =>
-                {
-                    cmb.Property(c => c.Latitude).HasPrecision(18, 7);
-                    cmb.Property(c => c.Longitude).HasPrecision(18, 7);
-                });
 
             //task data seed tags example 2 of 2
             //we need to do first migration and next update database for this example
@@ -166,7 +51,6 @@ namespace MyBoardsMinimalAPI.Entities
             //    );
 
         }
-
 
         //Example of composite keys on User for LastName and Email
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
