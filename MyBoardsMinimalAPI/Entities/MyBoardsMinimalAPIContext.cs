@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyBoardsMinimalAPI.Entities.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace MyBoardsMinimalAPI.Entities
         public DbSet<Address> Addresses { get; set; }
         public DbSet<WorkItemState> WorkItemStates { get; set; }
         public DbSet<WorkItemTag> WorkItemTag { get; set; }
+        public DbSet<TopAuthor> ViewTopAuthors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -137,6 +139,12 @@ namespace MyBoardsMinimalAPI.Entities
                 new WorkItemState { Id = 2, Value = "Doing" },
                 new WorkItemState { Id = 3, Value = "Done" }
                 );
+
+            modelBuilder.Entity<TopAuthor>(eb =>
+            {
+                eb.ToView("View_TopAuthors");
+                eb.HasNoKey();
+            });
 
             //task data seed tags example 2 of 2
             //we need to do first migration and next update database for this example

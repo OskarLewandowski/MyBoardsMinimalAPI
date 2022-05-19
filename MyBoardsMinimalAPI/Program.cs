@@ -432,5 +432,12 @@ app.MapPost("dataRawSqlUpdate", (MyBoardsMinimalAPIContext db) =>
     );
 });
 
+//View
+app.MapGet("dataViewTopAuthors", (MyBoardsMinimalAPIContext db) =>
+{
+    var topAuthors = db.ViewTopAuthors.ToList();
+
+    return topAuthors;
+});
 
 app.Run();
