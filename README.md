@@ -1,4 +1,4 @@
-# MyBoardsMinimalAPI
+# MyBoardsMinimalAPI [My Learning]
 Examples of use minimal api with entity framework
 - my learning how to work with entity framework
 
