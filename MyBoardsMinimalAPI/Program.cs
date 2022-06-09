@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
+using MyBoardsMinimalAPI;
 using MyBoardsMinimalAPI.Dto;
 using MyBoardsMinimalAPI.Entities;
 using System.Linq.Expressions;
@@ -40,6 +41,8 @@ if (pendingMigrations.Any())
 {
     dbContext.Database.Migrate();
 }
+
+DataGenerator.Seed(dbContext);
 
 var users = dbContext.Users.ToList();
 
