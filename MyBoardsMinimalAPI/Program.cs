@@ -42,7 +42,7 @@ if (pendingMigrations.Any())
     dbContext.Database.Migrate();
 }
 
-DataGenerator.Seed(dbContext);
+//DataGenerator.Seed(dbContext);
 
 var users = dbContext.Users.ToList();
 
