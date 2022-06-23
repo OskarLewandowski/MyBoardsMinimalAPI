@@ -1,18 +1,23 @@
 using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBoardsMinimalAPI;
 using MyBoardsMinimalAPI.Dto;
 using MyBoardsMinimalAPI.Entities;
+using MyBoardsMinimalAPI.Sieve;
+using Sieve.Models;
+using Sieve.Services;
 using System.Linq.Expressions;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<ISieveProcessor, ApplicationSieveProcessor>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //fix json serialize cycle
-builder.Services.Configure<JsonOptions>(options =>
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
@@ -645,5 +650,33 @@ app.MapGet("dataProblem_N+1_Better", async (MyBoardsMinimalAPIContext db) =>
     }
 });
 
+//Sieve
+app.MapPost("sieve", async ([FromBody] SieveModel query, ISieveProcessor sieveProcessor, MyBoardsMinimalAPIContext db) =>
+{
+    var epics = db.Epic
+    .Include(x => x.Author)
+    .AsQueryable();
+
+    var dtos = await sieveProcessor
+     .Apply(query, epics)
+     .Select(x => new EpicDto()
+     {
+         Id = x.Id,
+         Priority = x.Priority,
+         Area = x.Area,
+         StartDate = x.StartDate,
+         AuthorFullName = x.Author.FullName
+     })
+     .ToListAsync();
+
+    var totalCount = await sieveProcessor
+         .Apply(query, epics, applyPagination: false, applySorting: false)
+         .CountAsync();
+
+    var result = new PagedResult<EpicDto>(dtos, totalCount, query.PageSize.Value, query.Page.Value);
+
+    return result;
+
+});
 
 app.Run();
